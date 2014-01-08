@@ -2,49 +2,19 @@
 
 include('header.php');
 
-function getDirectory( $path = '.', $level = 0 ){ 
-
-    $ignore = array( 'cgi-bin', '.', '..' ); 
-    // Directories to ignore when listing output. Many hosts 
-    // will deny PHP access to the cgi-bin. 
-
-    $dh = @opendir( $path ); 
-    // Open the directory to the handle $dh 
-     
-    while( false !== ( $file = readdir( $dh ) ) ){ 
-    // Loop through the directory 
-     
-        if( !in_array( $file, $ignore ) ){ 
-        // Check that this file is not to be ignored 
-             
-            $spaces = str_repeat( '&nbsp;', ( $level * 4 ) ); 
-            // Just to add spacing to the list, to better 
-            // show the directory tree. 
-             
-            if( is_dir( "$path/$file" ) ){ 
-            // Its a directory, so we need to keep reading down... 
-             
-                echo "<strong>$spaces $file</strong><br />"; 
-                getDirectory( "$path/$file", ($level+1) ); 
-                // Re-call this same function but on a new directory. 
-                // this is what makes function recursive. 
-             
-            } else { 
-             
-                echo "$spaces $file<br />"; 
-                // Just print out the filename 
-             
-            } 
-         
-        } 
-     
-    } 
-     
-    closedir( $dh ); 
-    // Close the directory handle 
-
-} 
-
+function getDirectory($getdir)
+{ 
+    if ($handle = opendir($getdir)) 
+    {
+        while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+                echo "$entry";
+                echo "<br>";
+            }
+        }
+        closedir($handle);
+   }
+}
 ?>
 <script>
 function process()
@@ -143,7 +113,7 @@ xmlhttp.send();
           </div>
     
     	  <div class="col-lg-6">
-    		<div class="alert alert-dismissable alert-info">
+    		    <div class="alert alert-dismissable alert-info">
             	<button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Just for your Information : </strong> In order to make the process go smooth without any error, 
                 you have to make sure your tree is exactly the same as system. Unless you want to experience great error severe. 
@@ -153,13 +123,97 @@ xmlhttp.send();
 
 <div class="row">
 	<div class="col-lg-4">
-    	<button class="btn btn-primary btn-lg" onclick="process()">Processing</button>
+        <form role="form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+          <div class="form-group">
+            <label>Select File:</label>
+            <select class="form-control" name="file">
+              <?php
+                  if ($handle = opendir("results")) 
+                  {
+                      while (false !== ($entry = readdir($handle))) {
+                          if ($entry != "." && $entry != "..") {
+                              echo "<option value=$entry>$entry</option>";
+                          }
+                      }
+                      closedir($handle);
+                  }
+              ?>
+            </select>
+          </div>
+          <br>
+    	    <input type="submit" class="btn btn-primary" value="Process" name="submit">
+        </form>
     </div>
 </div>
-
+<br>
+<!--<div class="row">
+	<div class="col-lg-12">
+      <div class="progress progress-striped active">
+        <div class="progress-bar" id="load" style="width"></div>
+  </div>
+</div>!-->
 <div class="row">
-	<div class="col-lg-6">
-    	<div id="myDiv"></div>
+	<div class="col-lg-12">
+    	<h2>Classification Result</h2>
+        <div class="table-responsive">
+        	<table class="table table-bordered table-hover table-striped tablesorter">
+            	<thead>
+                	<tr>
+                    	  <th>No.<i class="fa fa-sort"></i></th>
+                        <th>Sentence<i class="fa fa-sort"></i></th>
+                        <th>Category<i class="fa fa-sort"></i></th>
+                  </tr>
+              </thead>
+              <tbody>
+                    <?php
+                    set_time_limit(3600);
+					          if(!isset($_POST['submit']))
+                    {
+                    }
+					          else
+                    {
+                        include 'library/sentiment.class.php';
+                        
+                        $sentiment = new Sentiment();
+                        
+                        $file = $_REQUEST['file'];
+                        $examples = file("results/".$file);
+                        
+                        $no = 1;
+
+                                foreach ($examples as $key) {
+                                    echo "<tr>";
+                                    echo "<td>".$no."</td>";
+                                    $scores = $sentiment->score($key);
+                                    foreach ($scores as $class => $score) {
+                                        $string = "$class -- <i>$score</i>";
+                                        if ($class == $sentiment->categorise($key)) {
+                                            $string = "<b class=\"$class\">$string</b>";
+                                            echo "<td>".$key."</td>";
+                                            if($class == "pos")
+                                            {
+                                             $stat = "<span class='label label-success'>Positive</span>";
+                                            }
+                                            elseif($class =="neg")
+                                            {
+                                             $stat = "<span class='label label-danger'>Negative</span>";
+                                            }
+                                            else
+                                            {
+                                             $stat = "<span class='label label-default'>Neutral</span>";
+                                            }
+                                            echo "<td>".$stat."</td>";
+                                        }
+                                    }
+                                    $no++;
+                                    echo "</tr>";
+                                    flush();
+                                }
+                    }
+                    ?>
+                  </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -169,4 +223,3 @@ xmlhttp.send();
 include('footer.php');
 
 ?>
-
