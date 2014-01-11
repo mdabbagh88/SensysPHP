@@ -1,10 +1,10 @@
 <?php
 
+error_reporting(0);
+
 set_time_limit(100000);
 
 include ("header.php");
-include ("library/simple_html_dom.php");
-require ("library/html2text.php");
 include ("library/crawler/libs/PHPCrawler.class.php");
 
 class MyCrawler extends PHPCrawler
@@ -74,9 +74,9 @@ class MyCrawler extends PHPCrawler
         <div class="col-xs-6">
             <div class="form-group">
                 <fieldset>
-                <legend>Advanced Setting</legend>
+                <legend>Advanced Setting | Still In Observation</legend>
                 <label>Filter Rule:</label>
-                <select multiple class="form-control">
+                <select multiple class="form-control" disabled="true">
                 	<option value="jpeg">JPEG</option>
                     <option value="gif">GIF</option>
                     <option value="css">CSS</option>
@@ -86,7 +86,7 @@ class MyCrawler extends PHPCrawler
                     <option value="bmp">BMP</option>
                 </select><br>
                 <label>Content Type Received:</label>
-                <select class="form-control">
+                <select class="form-control" disabled="true">
                     <option value="#text/html#">default</option>
                 	<option value="#text/html#">text/html</option>    
                 </select>
