@@ -16,30 +16,6 @@ function getDirectory($getdir)
    }
 }
 ?>
-<script>
-function process()
-{
-var xmlhttp;
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-    }
-  }
-xmlhttp.open("GET","library/function.php",true);
-xmlhttp.send();
-}
-</script>
-
 <div class="row">
 	<div class="col-lg-12">
     	<h1>Sentiment Analysis <small>Using Bayes Naive</small></h1>
@@ -49,18 +25,31 @@ xmlhttp.send();
     </div>
 </div>
 
-<div class="row">
+<!--<div class="row">
     
-          <div class="col-lg-3">
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-xs-6 text-right">
-                    <p class="announcement-heading">Right Tree</p>
-                   
+          <div class="col-lg-6">
+            <fieldset>
+              <legend>Basic Data Setting</legend>
+              <div class="form-group">
+                <label>Your Dictionary</label>
+                <input type="file" name="data">
+              </div>
+            </fieldset>
+          </div>
+
+</div>!-->
+
+<div class="row">
+
+          <div class="col-lg-3 text-center">
+                <div class="panel panel-success">
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col-xs-6 text-right">
+                        <p class="announcement-heading">Valid Tree</p>         
+                      </div>
                   </div>
                 </div>
-              </div>
                 <div class="panel-footer announcement-bottom">
                   <div class="row">
                     <div class="col-xs-6">
@@ -112,7 +101,7 @@ xmlhttp.send();
             </div>
           </div>
     
-    	  <div class="col-lg-6">
+    	  <div class="col-lg-3">
     		    <div class="alert alert-dismissable alert-info">
             	<button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Just for your Information : </strong> In order to make the process go smooth without any error, 
@@ -146,12 +135,6 @@ xmlhttp.send();
     </div>
 </div>
 <br>
-<!--<div class="row">
-	<div class="col-lg-12">
-      <div class="progress progress-striped active">
-        <div class="progress-bar" id="load" style="width"></div>
-  </div>
-</div>!-->
 <div class="row">
 	<div class="col-lg-12">
     	<h2>Classification Result</h2>

@@ -1,10 +1,13 @@
 <?php
 
-$prefix = array (
-  0 => 'isn\'t',
-  1 => 'aren\'t',
-  2 => 'not',
-  3 => 'isn\'t',
+$prefix = array(
+	0 => 'tidak',
+	1 => 'enggak',
+	2 => 'gak',
+	3 => 'gk',
+	4 => 'ya',
+	5 => 'yow',
+	6 => 'nah',
 );
 
 ?>

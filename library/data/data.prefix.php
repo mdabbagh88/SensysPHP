@@ -1,0 +1,1 @@
+a:7:{i:0;s:5:"tidak";i:1;s:6:"enggak";i:2;s:3:"gak";i:3;s:2:"gk";i:4;s:2:"ya";i:5;s:3:"yow";i:6;s:3:"nah";}
