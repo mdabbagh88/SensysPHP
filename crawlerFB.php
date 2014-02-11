@@ -4,8 +4,8 @@ error_reporting(0);
 
 set_time_limit(100000);
 
-include ("header.php");
-include ("library/crawler/libs/PHPCrawler.class.php");
+include("header.php");
+include("library/crawler/libs/PHPCrawler.class.php");
 
 class MyCrawler extends PHPCrawler
 {
@@ -32,12 +32,8 @@ class MyCrawler extends PHPCrawler
 
             if($yow){
                 foreach ($yow->$url->comments->data as $value) {
-            
-                    echo $value->message;
-                    
                     $fcontent = $value->message;
                     fwrite($konten,$fcontent.PHP_EOL);
-                   
                 }
             }
         flush();
@@ -47,17 +43,17 @@ class MyCrawler extends PHPCrawler
 
 <div class="row">
 	<div class="col-lg-12">
-    	<h1>Crawling<small> by typing a website</small></h1>
+    	<h1><i class="fa fa-facebook-square"></i><small> Using Graph Facebook API</small></h1>
     </div>
     <div class="alert alert-info alert-disimssable">
     	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     	You may enter a website below
     </div>
 </div>
-<form role="form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form role="form" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div class="row">
 	<div class="col-lg-12">
-        <h2>Crawler Setting</h2>
+        <h2>API Setting</h2>
         <div class="col-xs-6">
     	    <div class="form-group">
                 <fieldset>
@@ -98,7 +94,7 @@ class MyCrawler extends PHPCrawler
 <div class="row">
     <div class="col-lg-12 text-center">
          <div class="form-group">
-               <button type="submit" name="submit" class="btn btn-primary">
+               <button type="submit" name="proc" class="btn btn-primary" value="true">
                Start Crawling
                </button>
          </div>
@@ -118,7 +114,7 @@ class MyCrawler extends PHPCrawler
                     </tr>
                 </thead>
                 <?php
-					if(!isset($_POST['submit']))
+					if(!isset($_REQUEST['proc']))
                     {
                     }
                     else

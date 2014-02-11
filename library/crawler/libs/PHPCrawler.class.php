@@ -543,12 +543,18 @@ class PHPCrawler
     // Init vars
     $stop_crawling = false;
     
+    //------------------------------INJECTION-----------------------
+        
+    //------------------------------------------------------------
     // Main-Loop
     while ($stop_crawling == false)
     { 
       // Get next URL from cache
       $UrlDescriptor = $this->LinkCache->getNextUrl();
       
+        //-----------------------INJECTION------------------------
+                
+        //---------------------------------------------------------
       // Process URL
       if ($UrlDescriptor != null)
       {

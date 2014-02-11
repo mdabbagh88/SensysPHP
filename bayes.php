@@ -1,7 +1,8 @@
 <?php
 
-include('header.php');
+error_reporting(0);
 
+include('header.php');
 function getDirectory($getdir)
 { 
     if ($handle = opendir($getdir)) 
@@ -25,23 +26,9 @@ function getDirectory($getdir)
     </div>
 </div>
 
-<!--<div class="row">
-    
-          <div class="col-lg-6">
-            <fieldset>
-              <legend>Basic Data Setting</legend>
-              <div class="form-group">
-                <label>Your Dictionary</label>
-                <input type="file" name="data">
-              </div>
-            </fieldset>
-          </div>
-
-</div>!-->
-
 <div class="row">
 
-          <div class="col-lg-3 text-center">
+          <div class="col-lg-3">
                 <div class="panel panel-success">
                   <div class="panel-heading">
                     <div class="row">
@@ -93,8 +80,8 @@ function getDirectory($getdir)
                   <div class="row">
                     <div class="col-xs-6">
                       <?php
-						getDirectory( "library/dictionaries" );
-					  ?>
+						            getDirectory( "library/dictionaries" );
+					            ?>
                     </div>
                   </div>
                 </div>
@@ -112,25 +99,25 @@ function getDirectory($getdir)
 
 <div class="row">
 	<div class="col-lg-4">
-        <form role="form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <form role="form" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
           <div class="form-group">
-            <label>Select File:</label>
+            <label>Select Range Domain:</label>
             <select class="form-control" name="file">
               <?php
-                  if ($handle = opendir("results")) 
-                  {
-                      while (false !== ($entry = readdir($handle))) {
-                          if ($entry != "." && $entry != "..") {
-                              echo "<option value=$entry>$entry</option>";
-                          }
-                      }
-                      closedir($handle);
+                  require_once("configuration/connect.php");
+
+                  $sql = "select distinct domain from datadom";
+
+                  $exec = mysql_query($sql);
+
+                  while($r = mysql_fetch_array($exec)){
+                    echo "<option value='".$r['domain']."'>$r[domain]</option>";
                   }
               ?>
             </select>
           </div>
           <br>
-    	    <input type="submit" class="btn btn-primary" value="Process" name="submit">
+    	    <button type="submit" class="btn btn-primary" value="true" name="proc">Submit</button>
         </form>
     </div>
 </div>
@@ -148,58 +135,91 @@ function getDirectory($getdir)
                   </tr>
               </thead>
               <tbody>
-                    <?php
-                    set_time_limit(3600);
-					          if(!isset($_POST['submit']))
-                    {
-                    }
-					          else
-                    {
+                <?php
+                      if(!isset($_REQUEST['proc']))
+                      {
+
+                      }else
+                      {
+                        set_time_limit(3600);
+
                         include 'library/sentiment.class.php';
+                        include 'configuration/connect.php';
                         
                         $sentiment = new Sentiment();
-                        
-                        $file = $_REQUEST['file'];
-                        $examples = file("results/".$file);
-                        
+
                         $no = 1;
 
-                                foreach ($examples as $key) {
-                                    echo "<tr>";
-                                    echo "<td>".$no."</td>";
-                                    $scores = $sentiment->score($key);
-                                    foreach ($scores as $class => $score) {
-                                        $string = "$class -- <i>$score</i>";
-                                        if ($class == $sentiment->categorise($key)) {
-                                            $string = "<b class=\"$class\">$string</b>";
-                                            echo "<td>".$key."</td>";
-                                            if($class == "pos")
-                                            {
-                                             $stat = "<span class='label label-success'>Positive</span>";
-                                            }
-                                            elseif($class =="neg")
-                                            {
-                                             $stat = "<span class='label label-danger'>Negative</span>";
-                                            }
-                                            else
-                                            {
-                                             $stat = "<span class='label label-default'>Neutral</span>";
-                                            }
-                                            echo "<td>".$stat."</td>";
-                                        }
-                                    }
-                                    $no++;
-                                    echo "</tr>";
-                                    flush();
-                                }
-                    }
-                    ?>
-                  </tbody>
+                        $query = mysql_query("select no, article from datadom");
+
+                              while($row = mysql_fetch_array($query))
+                              {
+                                  echo "<tr>";
+                                  echo "<td>".$row['no']."</td>";
+                                  $scores = $sentiment->score($row['article']);
+                                  foreach ($scores as $class => $score) {
+                                      $string = "$class -- <i>$score</i>";
+                                      if ($class == $sentiment->categorise($row['article'])) {
+                                          $string = "<b class=\"$class\">$string</b>";
+                                          echo "<td>".$row['article']."</td>";
+                                          if($class == "pos")
+                                          {
+                                           $sql = "update datadom set class='pos' where article='$row[no]'";
+                                           //mysql_query($sql);
+                                           $stat = "<span class='label label-success'>Positive</span>";
+                                          }
+                                          elseif($class =="neg")
+                                          {
+                                           $sql1 = "update datadom set class='neg' where article='$row[no]'";
+                                           //mysql_query($sql1);
+                                           $stat = "<span class='label label-danger'>Negative</span>";
+                                          }
+                                          else
+                                          {
+                                           $sql2 = "update datadom set class='neu' where article='$row[no]'";
+                                           //mysql_query($sql2);
+                                           $stat = "<span class='label label-default'>Neutral</span>";
+                                          }
+                                          echo "<td>".$stat."</td>";
+                                      }
+                                  }
+
+                                  if(@!mysql_query($sql) or @!mysql_query($sql1) or @!mysql_query($sql2))
+                                  {
+                                    /*echo "<div class=modal fade>
+                                          <div class=modal-dialog>
+                                            <div class=modal-content>
+                                              <div class=modal-header>
+                                                <button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button>
+                                                <h4 class=modal-title>Error Happened !</h4>
+                                              </div>
+                                              <div class=modal-body>
+                                                <p>This is a normal in scrapping. Sometimes error on scrapping may happen in the middle. Make sure you use fast connection and use valid url file</p>
+                                                <hr>
+                                                <p>Perhaps you want to scrap from the beginning ?</p>
+                                              </div>
+                                              <div class=modal-footer>
+                                                <button type=button class=btn btn-default data-dismiss=modal>Close</button>
+                                              </div>
+                                            </div><!-- /.modal-content -->
+                                          </div><!-- /.modal-dialog -->
+                                          </div><!-- /.modal -->";*/
+                                          echo "something error".mysql_errno().mysql_error()."<br>";
+                                  }
+                                  $no++;
+                                  echo "</tr>";
+                                  flush();
+                              }
+                     }
+                  ?>
+              </tbody>
             </table>
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div><!-- /.modal -->
 
 <?php
 

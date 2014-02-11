@@ -1,9 +1,3 @@
-For Some reason, its present function related to Graph API Facebook.
-
-It only responds to a site which has Facebook Social Plugin Comments.
-
-It takes fully function from such url "Http://graph.facebook.com/comments?ids=|thesiteurl|"
-
 Crawling Function is taken from : PHPCrawl http://phpcrawl.cuab.de for the crawling method
 
 Classification is based on : PHPInsight (https://github.com/JWHennessey/phpInsight) that i improvise
@@ -11,6 +5,14 @@ Classification is based on : PHPInsight (https://github.com/JWHennessey/phpInsig
   for Classifying Word into 2 categories
 
 Released Version :
+
+1.2 Beta Version
+  * Removed Advance Setting for further notice
+  * Changing into database orientation to store data
+  * Removed API Usage for further notice
+  * Search Engine testing
+  * Report page
+  * Documentation with a hint
 
 1.1 Beta Version
 
