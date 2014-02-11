@@ -10,7 +10,7 @@
 </div>
 <div class="alert alert-success alert-dismissable">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    You have 1.1 Beta Version ! You can browse SensysPHP version <a class="alert-link" href="http://github.com/endrureza/sensysphp/"><i class="fa fa-github-alt"></i>Github</a>{Feel Free to use this on your project}
+    You have 1.2 Beta Version ! You can browse SensysPHP version <a class="alert-link" href="http://github.com/endrureza/sensysphp/"><i class="fa fa-github-alt"></i>Github</a>{Feel Free to use this on your project}
 </div>
 <form role="form" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <div class="row">
